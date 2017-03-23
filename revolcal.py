@@ -3,11 +3,16 @@
 Provide an extension od datetime to manage revoltuonnary date
 """
 
+# remove some warning
+# pylint: disable=line-too-long
+
+
+
 from __future__ import print_function
 import datetime
 import ephem
 
-
+WIKI_BASE_URL = "https://fr.wikipedia.org/wiki/"
 TROPICAL_YEAR = 365.24219878
 FRENCH_REVOLUTIONARY_EPOCH = datetime.date(1792, 9, 22)
 
@@ -15,21 +20,49 @@ REV_DAY_NAMES = ['Primidi', 'Duodi', 'Tridi', 'Quartidi', 'Quintidi', 'Sextidi',
                  'Octidi', 'Nonidi', 'Décadi']
 REV_MONTH_NAMES = ['Vendémiaire', 'Brumaire', 'Frimaire', 'Nivôse', 'Pluviôse', 'Ventôse',
                    'Germinal', 'Floréal', 'Prairial', 'Messidor', 'Thermidor', 'Fructidor']
+BASE_MONTH_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/"
+REV_MONTH_IMAGES = [
+    "c/cd/Vendémiaire_commence_le_22_septembre.jpg",
+    "6/62/Brumaire_commence_le_23_octobre.jpg",
+    "e/e3/Frimaire_commence_le_22_novembre.jpg",
+    "b/b6/Nivôse_commence_le_22_décembre.jpg",
+    "0/09/Pluviôse_commence_le_21_ou_22_janvier.jpg",
+    "7/7a/Ventôse_commence_le_20_ou_21_février.jpg",
+    "0/0a/Germinal_commence_le_21_ou_22_mars.jpg",
+    "f/fe/Floréal_commence_le_21_avril.jpg",
+    "4/4b/Prairial_commence_le_21_mai.jpg",
+    "a/af/Messidor_commence_le_21_ou_22_juin.jpg",
+    "b/bb/Thermidor_commence_le_20_ou_21_juillet.jpg",
+    "8/8c/Fructidor_commence_le_21_ou_22_août.jpg"
+]
 SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l\'opinion',
                   'Jour des récompenses', 'Jour de la Révolution']
 
-FETES=[["Raisin", "Safran", "Châtaigne", "Colchique", "Cheval", "Balsamine", "Carotte", "Amaranthe", "Panais", "Cuve", "Pomme de terre", "Immortelle", "Potiron", "Réséda", "Ane", "Belle de nuit", "Citrouille", "Sarrasin", "Tournesol", "Pressoir", "Chanvre", "Pêche", "Navet", "Amarillis", "Bœuf", "Aubergine", "Piment", "Tomate", "Orge", "Tonneau"],
-       ["Pomme", "Céleri", "Poire", "Betterave", "Oie", "Héliotrope", "Figue", "Scorsonère", "Alisier", "Charrue", "Salsifis", "Macre", "Topinambour", "Endive", "Dindon", "Chervis", "Cresson", "Dentelaire", "Grenade", "Herse", "Bacchante", "Azerole", "Garance", "Orange", "Faisan", "Pistache", "Macjonc", "Coing", "Cormier", "Rouleau"]                   ,
-       ["Raiponce", "Turneps", "Chicorée", "Nèfle", "Cochon", "Mâche", "Chou-fleur", "Miel", "Genièvre", "Pioche", "Cire", "Raifort", "Cèdre", "Sapin", "Chevreuil", "Ajonc", "Cyprès", "Lierre", "Sabine", "Hoyau", "Erable sucré", "Bruyère", "Roseau", "Oseille", "Grillon", "Pignon", "Liège", "Truffe", "Olive", "Pelle"]            ,
-       ["Tourbe", "Houille", "Bitume", "Soufre", "Chien", "Lave", "Terre végétale", "Fumier", "Salpêtre", "Fléau", "Granit", "Argile", "Ardoise", "Grès", "Lapin", "Silex", "Marne", "Pierre à chaux", "Marbre", "Van", "Pierre à Plâtre", "Sel", "Fer", "Cuivre", "Chat", "Etain", "Plomb", "Zinc", "Mercure", "Crible"]                     ,
-       ["Lauréole", "Mousse", "Fragon", "Perce Neige", "Taureau", "Laurier thym", "Amadouvier", "Mézéréon", "Peuplier", "Coignée", "Ellébore", "Brocoli", "Laurier", "Avelinier", "Vache", "Buis", "Lichen", "If", "Pulmonaire", "Serpette", "Thlaspi", "Thimèle", "Chiendent", "Trainasse", "Lièvre", "Guède", "Noisetier", "Cyclamen", "Chélidoine", "Traineau"],
-       ["Tussilage", "Cornouiller", "Violier", "Troëne", "Bouc", "Asaret", "Alaterne", "Violette", "Marceau", "Bêche", "Narcisse", "Orme", "Fumeterre", "Vélar", "Chèvre", "Epinard", "Doronic", "Mouron", "Cerfeuil", "Cordeau", "Mandragore", "Persil", "Cochiéaria", "Pâquerette", "Thon", "Pissenlit", "Sylve", "Capillaire", "Frêne", "Plantoir"],
-       ["Primevère", "Platane", "Asperge", "Tulipe", "Poule", "Bette", "Bouleau", "Jonquille", "Aulne", "Couvoir", "Pervenche", "Charme", "Morille", "Hêtre", "Abeille", "Laitue", "Mélèze", "Cigüe", "Radis", "Ruche", "Gainier", "Romaine", "Marronnier", "Roquette", "Pigeon", "Lilas", "Anémone", "Pensée", "Myrtille", "Greffoir"]           ,
-       ["Rose", "Chêne", "Fougère", "Aubépine", "Rossignol", "Ancolie", "Muguet", "Champignon", "Hyacinthe", "Rateau", "Rhubarbe", "Sainfoin", "Bâton d'or", "Chamerops", "Ver à soie", "Consoude", "Pimprenelle", "Corbeille d'or", "Arroche", "Sarcloir", "Statice", "Fritillaire", "Bourache", "Valériane", "Carpe", "Fusain", "Civette", "Buglosse", "Sénevé", "Houlette"],
-       ["Luzerne", "Hémérocalle", "Trèfle", "Angélique", "Canard", "Mélisse", "Fromental", "Martagon", "Serpolet", "Faux", "Fraise", "Bétoine", "Pois", "Acacia", "Caille", "Œillet", "Sureau", "Pavot", "Tilleul", "Fouche", "Barbeau", "Camomille", "Chèvrefeuille", "Caille-lait", "Tanche", "Jasmin", "Verveine", "Thym", "Pivoine", "Chariot"],
-       ["Seigle", "Avoine", "Oignon", "Véronique", "Mulet", "Romarin", "Concombre", "Echalotte", "Absinthe", "Faucille", "Coriandre", "Artichaut", "Girofle", "Lavande", "Chamois", "Tabac", "Groseille", "Gesse", "Cerise", "Parc", "Menthe", "Cumin", "Haricot", "Orcanète", "Pintade", "Sauge", "Ail", "Vesce", "Blé", "Chalémie"]                         ,
-       ["Epeautre", "Bouillon blanc", "Melon", "Ivraie", "Bélier", "Prêle", "Armoise", "Carthame", "Mûre", "Arrosoir", "Panis", "Salicorne", "Abricot", "Basilic", "Brebis", "Guimauve", "Lin", "Amande", "Gentiane", "Ecluse", "Carline", "Câprier", "Lentille", "Aunée", "Loutre", "Myrte", "Colza", "Lupin", "Coton", "Moulin"]                        ,
-       ["Prune", "Millet", "Lycoperdon", "Escourgeon", "Saumon", "Tubéreuse", "Sucrion", "Apocyn", "Réglisse", "Echelle", "Pastèque", "Fenouil", "Epine vinette", "Noix", "Truite", "Citron", "Cardère", "Nerprun", "Tagette", "Hotte", "Eglantier", "Noisette", "Houblon", "Sorgho", "Ecrevisse", "Bigarade", "Verge d'or", "Maïs", "Marron", "Panier"]
+FETES = [
+    [# Vendémiaire
+        ("Raisin", ), ("Safran", "Safran (épice)"), ("Châtaigne", ), ("Colchique", ), ("Cheval", ), ("Balsamine", "Balsaminaceae"), ("Carotte", ), ("Amarante", "Amarante (plante)"), ("Panais", ), ("Cuve", ), ("Pomme de terre", ), ("Immortelle", "Immortelle commune"), ("Potiron", ), ("Réséda", ), ("Âne", ), ("Belle de nuit", "Mirabilis jalapa"), ("Citrouille", ), ("Sarrasin", "Sarrasin (plante)"), ("Tournesol", ), ("Pressoir", ), ("Chanvre", ), ("Pêche", "Pêche (fruit)"), ("Navet", ), ("Amaryllis", "Amaryllis (plante)"), ("Bœuf", "Bos taurus"), ("Aubergine", ), ("Piment", ), ("Tomate", ), ("Orge", "Orge commune"), ("Tonneau", "Tonneau (récipient)")],
+    [# Brumaire
+        ("Pomme", ), ("Céleri", ), ("Poire", ), ("Betterave", ), ("Oie", ), ("Héliotrope", ), ("Figue", ), ("Scorsonère", ), ("Alisier", "Sorbus torminalis"), ("Charrue", ), ("Salsifis", ), ("Mâcre", "Mâcre nageante"), ("Topinambour", ), ("Endive", ), ("Dindon", "Dinde"), ("Chervis", ), ("Cresson", "Cresson de fontaine"), ("Dentelaire", "Plumbago"), ("Grenade", "Grenade (fruit)"), ("Herse", "Herse (agriculture)"), ("Bacchante", "Baccharis halimifolia"), ("Azerole", ), ("Garance", "Garance des teinturiers"), ("Orange", "Orange (fruit)"), ("Faisan", ), ("Pistache", ), ("Macjonc", "Gesse tubéreuse"), ("Coing", ), ("Cormier", ), ("Rouleau", "Rouleau agricole")],
+    [# Frimaire
+        ("Raiponce", "Raiponce (plante)"), ("Turneps", "Betterave fourragère"), ("Chicorée", ), ("Nèfle", ), ("Cochon", ), ("Mâche", ), ("Chou-fleur", ), ("Miel", ), ("Genièvre", "Juniperus communis"), ("Pioche", ), ("Cire", ), ("Raifort", ), ("Cèdre", ), ("Sapin", ), ("Chevreuil", ), ("Ajonc", ), ("Cyprès", ), ("Lierre", "Hedera"), ("Sabine", "Juniperus sabina"), ("Hoyau", ), ("Érable sucré", "Érable à sucre"), ("Bruyère", ), ("Roseau", ), ("Oseille", ), ("Grillon", "Gryllidae"), ("Pignon", "Pignon de pin"), ("Liège", ), ("Truffe", "Truffe (champignon)"), ("Olive", ), ("Pelle", "Pelle (outil)")],
+    [# Nivôse
+        ("Tourbe", ), ("Houille", ), ("Bitume", ), ("Soufre", ), ("Chien", ), ("Lave", ), ("Terre végétale", "Humus"), ("Fumier", ), ("Salpêtre", "Nitrate de potassium"), ("Fléau", "Fléau (agriculture)"), ("Granit", ), ("Argile", ), ("Ardoise", ), ("Grès", "Grès (géologie)"), ("Lapin", "Oryctolagus cuniculus"), ("Silex", ), ("Marne", "Marne (géologie)"), ("Pierre à chaux", "Calcaire"), ("Marbre", ), ("Van", "Van (agriculture)"), ("Pierre à plâtre", "Gypse"), ("Sel", "Chlorure de sodium"), ("Fer", ), ("Cuivre", ), ("Chat", ), ("Étain", ), ("Plomb", ), ("Zinc", ), ("Mercure", "Mercure (chimie)"), ("Crible", "Tamis")],
+    [# Pluviôse
+        ("Lauréole", ), ("Mousse", "Bryophyta"), ("Fragon", "Ruscus aculeatus"), ("Perce-neige", ), ("Taureau", ), ("Laurier tin", "Viorne tin"), ("Amadouvier", ), ("Mézéréon", "Bois-joli"), ("Peuplier", ), ("Cognée", ), ("Ellébore", "Hellébore"), ("Brocoli", ), ("Laurier", "Laurus nobilis"), ("Avelinier", "Noisetier"), ("Vache", ), ("Buis", ), ("Lichen", ), ("If", "Taxus"), ("Pulmonaire", "pulmonaria"), ("Serpette", ), ("Thlaspi", ), ("Thimele", "Daphné garou"), ("Chiendent", ), ("Trainasse", "Renouée des oiseaux"), ("Lièvre", ), ("Guède", ), ("Noisetier", ), ("Cyclamen", ), ("Chélidoine", "Chelidonium majus"), ("Traîneau", )],
+    [# Ventôse
+        ("Tussilage", ), ("Cornouiller", "Cornus (plante)"), ("Violier", "Vélar"), ("Troène", ), ("Bouc", "Bouc (animal)"), ("Asaret", ), ("Alaterne", "Nerprun alaterne"), ("Violette", "Viola (genre végétal)"), ("Marceau", "Saule marsault"), ("Bêche", ), ("Narcisse", "Narcissus"), ("Orme", ), ("Fumeterre", ), ("Vélar", "Erysimum"), ("Chèvre", ), ("Épinard", ), ("Doronic", "Doronicum"), ("Mouron", "Mouron (flore)"), ("Cerfeuil", "Cerfeuil commun"), ("Cordeau", ), ("Mandragore", ), ("Persil", ), ("Cochléaria", "Cochlearia"), ("Pâquerette", ), ("Thon", ), ("Pissenlit", ), ("Sylvie", "Anémone sylvie"), ("Capillaire", "Capillaire de Montpellier"), ("Frêne", ), ("Plantoir", )],
+    [# Germinal
+        ("Primevère", ), ("Platane", ), ("Asperge", ), ("Tulipe", ), ("Poule", "Poule (animal)"), ("Bette", "Blette (plante)"), ("Bouleau", ), ("Jonquille", ), ("Aulne", ), ("Greffoir", ), ("Pervenche", ), ("Charme", ), ("Morille", "Morchella"), ("Hêtre", "Fagus sylvatica"), ("Abeille", ), ("Laitue", ), ("Mélèze", ), ("Ciguë", "Apiaceae"), ("Radis", ), ("Ruche", ), ("Gainier", "Arbre de Judée"), ("Romaine", "Laitue romaine"), ("Marronnier", "Marronnier commun"), ("Roquette", "Roquette (plante)"), ("Pigeon", ), ("Lilas (commun)", "Syringa vulgaris"), ("Anémone", ), ("Pensée", "Viola (genre végétal)"), ("Myrtile", ), ("Couvoir", )],
+    [# Floréal
+        ("Rose", "Rose (fleur)"), ("Chêne", ), ("Fougère", ), ("Aubépine", ), ("Rossignol", ), ("Ancolie", ), ("Muguet", "Muguet de mai"), ("Champignon", ), ("Hyacinthe", "Hyacinthus"), ("Râteau", "Râteau (outil)"), ("Rhubarbe", ), ("Sainfoin", ), ("Bâton-d'or", "Erysimum"), ("Chamérisier", "Lonicera xylosteum"), ("Ver à soie", ), ("Consoude", ), ("Pimprenelle", ), ("Corbeille d'or", ), ("Arroche", ), ("Sarcloir", ), ("Statice", "Armérie maritime"), ("Fritillaire", ), ("Bourrache", ), ("Valériane", ), ("Carpe", "Carpe (poisson)"), ("Fusain", ), ("Civette", ), ("Buglosse", "Anchusa"), ("Sénevé", "Moutarde blanche"), ("Houlette", "Houlette (agriculture)")],
+    [# Prairial
+        ("Luzerne", "Luzerne cultivée"), ("Hémérocalle", ), ("Trèfle", ), ("Angélique", "Angelica"), ("Canard", ), ("Mélisse", ), ("Fromental", "Fromental (plante)"), ("Lis martagon", ), ("Serpolet", ), ("Faux", "Faux (outil)"), ("Fraise", "Fraise (fruit)"), ("Bétoine", ), ("Pois", ), ("Acacia", "Robinia pseudoacacia"), ("Caille", ), ("Œillet", ), ("Sureau", ), ("Pavot", ), ("Tilleul", ), ("Fourche", ), ("Barbeau", "Centaurea cyanus"), ("Camomille", "Camomille romaine"), ("Chèvrefeuille", ), ("Caille-lait", ), ("Tanche", ), ("Jasmin", ), ("Verveine", ), ("Thym", ), ("Pivoine", ), ("Chariot", )],
+    [# Messidor
+        ("Seigle", ), ("Avoine", "Avoine cultivée"), ("Oignon", ), ("Véronique", "Véronique (plante)"), ("Mulet", ), ("Romarin", ), ("Concombre", ), ("Échalote", ), ("Absinthe", "Absinthe (plante)"), ("Faucille", ), ("Coriandre", ), ("Artichaut", ), ("Girofle", ), ("Lavande", ), ("Chamois", ), ("Tabac", ), ("Groseille", ), ("Gesse", "Lathyrus"), ("Cerise", ), ("Parc", ), ("Menthe", ), ("Cumin", ), ("Haricot", ), ("Orcanète", "Orcanette des teinturiers"), ("Pintade", ), ("Sauge", ), ("Ail", "ail cultivé"), ("Vesce", ), ("Blé", ), ("Chalemie", )],
+    [# Thermidor
+        ("Épeautre", ), ("Bouillon-blanc", ), ("Melon", "Melon (plante)"), ("Ivraie", ), ("Bélier", ), ("Prêle", "Sphenophyta"), ("Armoise", ), ("Carthame", ), ("Mûre", "Mûre (fruit de la ronce)"), ("Arrosoir", ), ("Panic", "Panic (plante)"), ("Salicorne", ), ("Abricot", ), ("Basilic", "Basilic (plante)"), ("Brebis", "Mouton"), ("Guimauve", "Guimauve officinale"), ("Lin", "Lin cultivé"), ("Amande", ), ("Gentiane", ), ("Écluse", ), ("Carline", ), ("Câprier", ), ("Lentille", "Lentille cultivée"), ("Aunée", "Inule"), ("Loutre", ), ("Myrte", ), ("Colza", ), ("Lupin", ), ("Coton", ), ("Moulin", )],
+    [# Fructidor
+        ("Prune", "Prune (fruit)"), ("Millet", "Millet (graminée)"), ("Lycoperdon", "Vesse-de-loup"), ("Escourgeon", ), ("Saumon", ), ("Tubéreuse", ), ("Sucrion", "Escourgeon"), ("Apocyn", "Asclépiade commune"), ("Réglisse", ), ("Échelle", "Échelle (outil)"), ("Pastèque", ), ("Fenouil", ), ("Épine vinette", ), ("Noix", ), ("Truite", ), ("Citron", ), ("Cardère", "Cardère sauvage"), ("Nerprun", "Rhamnus"), ("Tagette", "Tagetes"), ("Hotte", ), ("Églantier", "Rosa canina"), ("Noisette", ), ("Houblon", ), ("Sorgho", "Sorgho commun"), ("Écrevisse", ), ("Bigarade", ), ("Verge d'or", ), ("Maïs", ), ("Marron", "Marron (fruit)"), ("Panier", )]
 ]
 
 def int_to_roman(value):
@@ -109,12 +142,6 @@ class RDate(datetime.date):
     def __new__(cls, year, month, day):
         return datetime.date.__new__(cls, year, month, day)
 
-    def revo_str(self):
-        """
-        to remove
-        """
-        return print_to_revo(self)
-
     def revo(self):
         """
         revo uple
@@ -125,7 +152,7 @@ class RDate(datetime.date):
         """ modify fmt with specific revol format """
         rdate = d_to_french_revolutionary(self)
         newformat = []
-        push = lambda val : newformat.append(str(val))
+        push = lambda val: newformat.append(str(val))
         i, n = 0, len(fmt)
         while i < n:
             char = fmt[i]
@@ -156,6 +183,12 @@ class RDate(datetime.date):
                                     push("")
                                 else:
                                     push(REV_MONTH_NAMES[rdate['mois']])
+                            elif char == "I":
+                                if rdate['mois'] >= len(REV_MONTH_NAMES):
+                                    push("")
+                                else:
+                                    push("{}{}".format(BASE_MONTH_IMAGE,
+                                                        REV_MONTH_IMAGES[rdate['mois']]))
                             elif char == "m":
                                 #Month as a zero-padded decimal number
                                 push("%02d" % (rdate['mois'] + 1))
@@ -173,7 +206,18 @@ class RDate(datetime.date):
                                 if rdate['mois'] >= len(REV_MONTH_NAMES):
                                     push(SANSCULOTTIDES[rdate['jour'] % 10])
                                 else:
-                                    push(FETES[rdate['mois']][rdate['jour']])
+                                    push(FETES[rdate['mois']][rdate['jour']][0])
+                            elif char == "F":
+                                #wikipedia url of the fete of the day.
+                                if rdate['mois'] >= len(REV_MONTH_NAMES):
+                                    push("")
+                                else:
+                                    try:
+                                        resource = FETES[rdate['mois']][rdate['jour']][1]
+                                    except IndexError:
+                                        resource = FETES[rdate['mois']][rdate['jour']][0]
+                                    push("{}{}".format(WIKI_BASE_URL, resource.replace(" ", "_")))
+
                             else:
                                 push("%r")
                                 push(char)
@@ -206,10 +250,13 @@ class RDate(datetime.date):
 
             %rd Day of the month as a zero-padded decimal number.
             %rB Month as locale’s full name
+            %rI link to wikipedia image for the month.
             %rm Month as a zero-padded decimal number.
             %ry Year as decimal number.
             %rY Year as Romanian number.
             %rW Decade number in the year.
+            %rf grain, pasture, trees, roots, flowers, fruits, animal, tool assciated with the day
+            %rF link to the french wikipage associated with the day
         """
         if not isinstance(fmt, str):
             raise TypeError("must be str, not %s" % type(fmt).__name__)
@@ -248,23 +295,33 @@ def tests():
     test(2013, 10, 21, "Décadi 30 Vendémiaire [Decade 3] an CCXXII(222)")
 
 
-if __name__ == "__main__" :
-    import sys
+def my_display(argv):
+    """
+    display date as I want
+    """
     ldate = RDate.today()
-    if len(sys.argv) == 2:
+    if len(argv) == 2:
         ldate = None
+        try:
+            delay = int(argv[1])
+            tdate = datetime.date.today() + datetime.timedelta(delay)
+            ldate = RDate(tdate.year, tdate.month, tdate.day)
+        except ValueError:
+            print("value error")
+    if len(argv) == 4:
+        ldate = RDate(int(argv[1]),
+                    int(argv[2]),
+                    int(argv[3]))
+    print("{0:%rA %rd %rB %rY(%ry)}".format(ldate))
+    print("{0} {0:%rf %rF}".format(ldate))
+    print("{0:%rB : %rI}".format(ldate))
+
+    print("")
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) == 2:
         if sys.argv[1].startswith("test"):
             tests()
             exit()
-        try:
-            delay = int(sys.argv[1])
-            tdate = datetime.date.today() + datetime.timedelta(delay)
-            ldate=RDate(tdate.year, tdate.month, tdate.day)
-        except ValueError :
-            print("value error")
-    if len(sys.argv) == 4:
-            ldate=RDate(int(sys.argv[1]),
-                    int(sys.argv[2]),
-                    int(sys.argv[3]))
-    print("{0} {0:%rA %rd %rB [Decade %rW] an %rY(%ry)}".format(ldate))
-    print("")
+    my_display(sys.argv)
