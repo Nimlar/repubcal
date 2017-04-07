@@ -73,12 +73,12 @@ def int_to_roman(value):
         raise ValueError, "Argument must be between 1 and 3999"
     ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     nums = ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
-    result = ""
+    result = []
     for i in range(len(ints)):
         count = int(value / ints[i])
-        result += nums[i] * count
+        result.append(nums[i] * count)
         value -= ints[i] * count
-    return result
+    return "".join(result)
 
 def equinoxe_automn(year):
     """
