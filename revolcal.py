@@ -300,20 +300,32 @@ def my_display(argv):
     display date as I want
     """
     ldate = RDate.today()
+    prefix = "Aujourd'hui nous sommes le"
     if len(argv) == 2:
         ldate = None
         try:
             delay = int(argv[1])
             tdate = datetime.date.today() + datetime.timedelta(delay)
             ldate = RDate(tdate.year, tdate.month, tdate.day)
+            if delay == 0:
+                prefix = "Aujourd'hui ({0:%A %d %B %Y}) nous sommes le".format(ldate)
+            elif delay == 1:
+                prefix = "Demain ({0:%A %d %B %Y}) sera le".format(ldate)
+            elif delay == 2:
+                prefix = "Apres-demain ({0:%A %d %B %Y}) sera le".format(ldate)
+            elif delay == -1:
+                prefix = "Hier ({0:%A %d %B %Y}) était le".format(ldate)
+            elif delay == -2:
+                prefix = "Avant-hier ({0:%A %d %B %Y}) était le".format(ldate)
+            else:
+                prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
         except ValueError:
             print("value error")
     if len(argv) == 4:
-        ldate = RDate(int(argv[1]),
-                    int(argv[2]),
-                    int(argv[3]))
-    print("{0:%rA %rd %rB %rY(%ry)}".format(ldate))
-    print("{0} {0:%rf %rF}".format(ldate))
+        ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
+        prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
+    print("{0} {1:%rA %rd %rB %rY(%ry)}".format(prefix, ldate))
+    print("Et on pense aux {0:%rf %rF}".format(ldate))
     print("{0:%rB : %rI}".format(ldate))
 
     print("")
