@@ -188,7 +188,7 @@ class RDate(datetime.date):
                                     push("")
                                 else:
                                     push("{}{}".format(BASE_MONTH_IMAGE,
-                                                        REV_MONTH_IMAGES[rdate['mois']]))
+                                                       REV_MONTH_IMAGES[rdate['mois']]))
                             elif char == "m":
                                 #Month as a zero-padded decimal number
                                 push("%02d" % (rdate['mois'] + 1))
@@ -242,11 +242,11 @@ class RDate(datetime.date):
 
     def __format__(self, fmt):
         """
-            add some new format to dispaly date
+            add some new format to display date
             %r should start any revolutionarry modifiator
 
             %rA Week^WDecadeday as locale’s full name.
-            %rw Week^Decadeday as a decimal number, where 0 is Primid and 9 is Decadi.
+            %rw Week^WDecadeday as a decimal number, where 0 is Primid and 9 is Decadi.
 
             %rd Day of the month as a zero-padded decimal number.
             %rB Month as locale’s full name
@@ -255,7 +255,7 @@ class RDate(datetime.date):
             %ry Year as decimal number.
             %rY Year as Romanian number.
             %rW Decade number in the year.
-            %rf grain, pasture, trees, roots, flowers, fruits, animal, tool assciated with the day
+            %rf grain, pasture, trees, roots, flowers, fruits, animal, tool associated with the day
             %rF link to the french wikipage associated with the day
         """
         if not isinstance(fmt, str):
@@ -325,7 +325,7 @@ def my_display(argv):
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
     print("{0} {1:%rA %rd %rB %rY(%ry)}".format(prefix, ldate))
-    print("Et on pense aux {0:%rf %rF}".format(ldate))
+    print("Cette journée est dédiée à {0:%rf %rF}".format(ldate))
     print("{0:%rB : %rI}".format(ldate))
 
     print("")
