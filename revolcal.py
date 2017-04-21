@@ -70,12 +70,12 @@ def int_to_roman(value):
     Convert from decimal to Roman
     """
     if not 0 <= value < 4000:
-        raise ValueError, "Argument must be between 1 and 3999"
+        raise ValueError("Argument must be between 1 and 3999")
     ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     nums = ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
     result = []
     for i in range(len(ints)):
-        count = int(value / ints[i])
+        count = int(value // ints[i])
         result.append(nums[i] * count)
         value -= ints[i] * count
     return "".join(result)
@@ -128,9 +128,9 @@ def d_to_french_revolutionary(date):
     """
     rdate = {}
     rdate['an'], equinoxe = annee_de_la_revolution(date)
-    rdate['mois'] = (int(ephem.Date(date) - equinoxe) / 30)
+    rdate['mois'] = (int(ephem.Date(date) - equinoxe) // 30)
     rdate['jour'] = int(ephem.Date(date) - equinoxe) % 30
-    rdate['decade'] = (rdate['jour'] / 10) + 1 +3*rdate['mois']
+    rdate['decade'] = (rdate['jour'] // 10) + 1 +3*rdate['mois']
     return rdate
 
 
