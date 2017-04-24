@@ -1,6 +1,10 @@
 # revolcal
 Python module to convert to French Republican Calendar
 
+
+Algorithm source from https://www.fourmilab.ch/documents/calendar/calendar.js
+by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer))
+
 ## Usage from command line:
 
 * To get the today information
