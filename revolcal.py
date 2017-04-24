@@ -35,7 +35,7 @@ REV_MONTH_IMAGES = [
     "b/bb/Thermidor_commence_le_20_ou_21_juillet.jpg",
     "8/8c/Fructidor_commence_le_21_ou_22_août.jpg"
 ]
-SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l\'opinion',
+SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l’opinion',
                   'Jour des récompenses', 'Jour de la Révolution']
 
 FETES = [
@@ -196,7 +196,7 @@ class RDate(datetime.date):
                                 #Year as decimal number.
                                 push(rdate['an'])
                             elif char == "Y":
-                                #Year as Romanan number.
+                                #Year as Roman number.
                                 push(int_to_roman(rdate['an']))
                             elif char == "W":
                                 #Decade number in the year.
@@ -253,7 +253,7 @@ class RDate(datetime.date):
             %rI link to wikipedia image for the month.
             %rm Month as a zero-padded decimal number.
             %ry Year as decimal number.
-            %rY Year as Romanan number.
+            %rY Year as Roman number.
             %rW Decade number in the year.
             %rf grain, pasture, trees, roots, flowers, fruits, animal, tool associated with the day
             %rF link to the french wikipage associated with the day
@@ -282,7 +282,7 @@ def tests():
     test(1792, 9, 23, "Duodi 02 Vendémiaire [Decade 1] an I(1)")
     test(1793, 5, 4, "Quintidi 15 Floreal [Decade 23] an I(1)")
     test(1793, 9, 14, "Octidi 28 Fructidor [Decade 36] an I(1)")
-    test(1793, 9, 20, "Jour de l'opinion [Decade 37] an I(1)")
+    test(1793, 9, 20, "Jour de l’opinion [Decade 37] an I(1)")
     test(1795, 1, 18, "Nonidi 29 Nivose [Decade 3] an III(3)")
     test(1798, 9, 21, "Jour des récompenses 05 [Decade 37] an VI(6)")
     test(1798, 9, 22, "Primidi 01 Vendémiaire [Decade 1] an VII(7) error here as sextil year may have change")
@@ -300,7 +300,7 @@ def my_display(argv):
     display date as I want
     """
     ldate = RDate.today()
-    prefix = "Aujourd'hui nous sommes le"
+    prefix = "Aujourd’hui nous sommes le"
     if len(argv) == 2:
         ldate = None
         try:
@@ -308,11 +308,11 @@ def my_display(argv):
             tdate = datetime.date.today() + datetime.timedelta(delay)
             ldate = RDate(tdate.year, tdate.month, tdate.day)
             if delay == 0:
-                prefix = "Aujourd'hui ({0:%A %d %B %Y}) nous sommes le".format(ldate)
+                prefix = "Aujourd’hui ({0:%A %d %B %Y}) nous sommes le".format(ldate)
             elif delay == 1:
                 prefix = "Demain ({0:%A %d %B %Y}) sera le".format(ldate)
             elif delay == 2:
-                prefix = "Apres-demain ({0:%A %d %B %Y}) sera le".format(ldate)
+                prefix = "Après-demain ({0:%A %d %B %Y}) sera le".format(ldate)
             elif delay == -1:
                 prefix = "Hier ({0:%A %d %B %Y}) était le".format(ldate)
             elif delay == -2:
