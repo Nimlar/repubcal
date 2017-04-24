@@ -35,7 +35,7 @@ REV_MONTH_IMAGES = [
     "b/bb/Thermidor_commence_le_20_ou_21_juillet.jpg",
     "8/8c/Fructidor_commence_le_21_ou_22_août.jpg"
 ]
-SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l\'opinion',
+SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l’opinion',
                   'Jour des récompenses', 'Jour de la Révolution']
 
 FETES = [
@@ -62,7 +62,7 @@ FETES = [
     [# Thermidor
         ("l’Épeautre", "Épeautre"), ("le Bouillon-blanc", "Bouillon-blanc"), ("le Melon", "Melon (plante)"), ("l’Ivraie", "Ivraie"), ("le Bélier", "Bélier"), ("la Prêle", "Sphenophyta"), ("l’Armoise", "Armoise"), ("la Carthame", "Carthame"), ("la Mûre", "Mûre (fruit de la ronce)"), ("l’Arrosoir", "Arrosoir"), ("le Panic", "Panic (plante)"), ("la Salicorne", "Salicorne"), ("l’Abricot", "Abricot"), ("le Basilic", "Basilic (plante)"), ("la Brebis", "Mouton"), ("la Guimauve", "Guimauve officinale"), ("le Lin", "Lin cultivé"), ("l’Amande", "Amande"), ("la Gentiane", "Gentiane"), ("l’Écluse", "Écluse"), ("la Carline", "Carline"), ("le Câprier", "Câprier"), ("la Lentille", "Lentille cultivée"), ("l’Aunée", "Inule"), ("la Loutre", "Loutre"), ("la Myrte", "Myrte"), ("le Colza", "Colza"), ("le Lupin", "Lupin"), ("le Coton", "Coton"), ("le Moulin", "Moulin")],
     [# Fructidor
-        ("la Prune", "Prune (fruit)"), ("le Millet", "Millet (graminée)"), ("le Lycoperdon", "Vesse-de-loup"), ("l’Escourgeon", "Escourgeon"), ("le Saumon", "Saumon"), ("la Tubéreuse", "Tubéreuse"), ("le Sucrion", "Escourgeon"), ("l’Apocyn", "Asclépiade commune"), ("la Réglisse", "Réglisse"), ("l’Échelle", "Échelle (outil)"), ("la Pastèque", "Pastèque"), ("le Fenouil", "Fenouil"), ("l’Épine vinette", "Épine vinette"), ("la Noix", "Noix"), ("la Truite", "Truite"), ("le Citron", "Citron"), ("la Cardère", "Cardère sauvage"), ("le Nerprun", "Rhamnus"), ("la Tagette", "Tagetes"), ("la Hotte", "Hotte"), ("l’Églantier", "Rosa canina"), ("la Noisette", "Noisette"), ("le Houblon", "Houblon"), ("le Sorgho", "Sorgho commun"), ("l’Écrevisse", "Écrevisse"), ("la Bigarade", "Bigarade"), ("la Verge d'or", "Verge d'or"), ("le Maïs", "Maïs"), ("le Marron", "Marron (fruit)"), ("le Panier","Panier" )]
+        ("la Prune", "Prune (fruit)"), ("le Millet", "Millet (graminée)"), ("le Lycoperdon", "Vesse-de-loup"), ("l’Escourgeon", "Escourgeon"), ("le Saumon", "Saumon"), ("la Tubéreuse", "Tubéreuse"), ("le Sucrion", "Escourgeon"), ("l’Apocyn", "Asclépiade commune"), ("la Réglisse", "Réglisse"), ("l’Échelle", "Échelle (outil)"), ("la Pastèque", "Pastèque"), ("le Fenouil", "Fenouil"), ("l’Épine vinette", "Épine vinette"), ("la Noix", "Noix"), ("la Truite", "Truite"), ("le Citron", "Citron"), ("la Cardère", "Cardère sauvage"), ("le Nerprun", "Rhamnus"), ("la Tagette", "Tagetes"), ("la Hotte", "Hotte"), ("l’Églantier", "Rosa canina"), ("la Noisette", "Noisette"), ("le Houblon", "Houblon"), ("le Sorgho", "Sorgho commun"), ("l’Écrevisse", "Écrevisse"), ("la Bigarade", "Bigarade"), ("la Verge d'or", "Verge d'or"), ("le Maïs", "Maïs"), ("le Marron", "Marron (fruit)"), ("le Panier", "Panier")]
 ]
 
 def int_to_roman(value):
@@ -196,7 +196,7 @@ class RDate(datetime.date):
                                 #Year as decimal number.
                                 push(rdate['an'])
                             elif char == "Y":
-                                #Year as Romanan number.
+                                #Year as Roman number.
                                 push(int_to_roman(rdate['an']))
                             elif char == "W":
                                 #Decade number in the year.
@@ -212,10 +212,7 @@ class RDate(datetime.date):
                                 if rdate['mois'] >= len(REV_MONTH_NAMES):
                                     push("")
                                 else:
-                                    try:
-                                        resource = FETES[rdate['mois']][rdate['jour']][1]
-                                    except IndexError:
-                                        resource = FETES[rdate['mois']][rdate['jour']][0]
+                                    resource = FETES[rdate['mois']][rdate['jour']][1]
                                     push("{}{}".format(WIKI_BASE_URL, resource.replace(" ", "_")))
 
                             else:
@@ -253,7 +250,7 @@ class RDate(datetime.date):
             %rI link to wikipedia image for the month.
             %rm Month as a zero-padded decimal number.
             %ry Year as decimal number.
-            %rY Year as Romanan number.
+            %rY Year as Roman number.
             %rW Decade number in the year.
             %rf grain, pasture, trees, roots, flowers, fruits, animal, tool associated with the day
             %rF link to the french wikipage associated with the day
@@ -282,7 +279,7 @@ def tests():
     test(1792, 9, 23, "Duodi 02 Vendémiaire [Decade 1] an I(1)")
     test(1793, 5, 4, "Quintidi 15 Floreal [Decade 23] an I(1)")
     test(1793, 9, 14, "Octidi 28 Fructidor [Decade 36] an I(1)")
-    test(1793, 9, 20, "Jour de l'opinion [Decade 37] an I(1)")
+    test(1793, 9, 20, "Jour de l’opinion [Decade 37] an I(1)")
     test(1795, 1, 18, "Nonidi 29 Nivose [Decade 3] an III(3)")
     test(1798, 9, 21, "Jour des récompenses 05 [Decade 37] an VI(6)")
     test(1798, 9, 22, "Primidi 01 Vendémiaire [Decade 1] an VII(7) error here as sextil year may have change")
@@ -300,7 +297,7 @@ def my_display(argv):
     display date as I want
     """
     ldate = RDate.today()
-    prefix = "Aujourd'hui nous sommes le"
+    prefix = "Aujourd’hui nous sommes le"
     if len(argv) == 2:
         ldate = None
         try:
@@ -308,11 +305,11 @@ def my_display(argv):
             tdate = datetime.date.today() + datetime.timedelta(delay)
             ldate = RDate(tdate.year, tdate.month, tdate.day)
             if delay == 0:
-                prefix = "Aujourd'hui ({0:%A %d %B %Y}) nous sommes le".format(ldate)
+                prefix = "Aujourd’hui ({0:%A %d %B %Y}) nous sommes le".format(ldate)
             elif delay == 1:
                 prefix = "Demain ({0:%A %d %B %Y}) sera le".format(ldate)
             elif delay == 2:
-                prefix = "Apres-demain ({0:%A %d %B %Y}) sera le".format(ldate)
+                prefix = "Après-demain ({0:%A %d %B %Y}) sera le".format(ldate)
             elif delay == -1:
                 prefix = "Hier ({0:%A %d %B %Y}) était le".format(ldate)
             elif delay == -2:
@@ -325,7 +322,13 @@ def my_display(argv):
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
     print("{0} {1:%rA %rd %rB %rY(%ry)}".format(prefix, ldate))
-    print("Cette journée est dédiée à {0:%rf %rF}".format(ldate))
+    fete_name = "{0:%rf}".format(ldate)
+    if fete_name.startswith("le "):
+        article = "au"
+        fete_name = fete_name[3:]
+    else:
+        article = "à"
+    print("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
     print("{0:%rB : %rI}".format(ldate))
 
     print("")
