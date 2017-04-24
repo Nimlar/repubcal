@@ -33,7 +33,7 @@ Only interesting part in this new class is the new `%r?` descriptors of the `for
             %rI link to wikipedia image for the month.
             %rm Month as a zero-padded decimal number.
             %ry Year as decimal number.
-            %rY Year as Romanian number.
+            %rY Year as Romanan number.
             %rW Decade number in the year.
             %rf grain, pasture, trees, roots, flowers, fruits, animal, tool associated with the day
             %rF link to the french wikipage associated with the day

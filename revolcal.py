@@ -99,16 +99,16 @@ def annee_de_la_revolution(date):
     #print("lasteq0 {}".format(lasteq))
     while lasteq > edate:
         guess -= 1
-        #print("guess1 {}".fromat(guess))
+        #print("guess1 {}".format(guess))
         lasteq = equinoxe_automn(guess)
-        #print("lasteq1 {}".fromat(lasteq))
+        #print("lasteq1 {}".format(lasteq))
     nexteq = lasteq - 1
     while not int(lasteq) <= edate < int(nexteq):
         lasteq = nexteq
         guess += 1
         #print("guess2 {}".format(guess))
         nexteq = equinoxe_automn(guess)
-        #print("lasteq2 {}".foramt(lasteq))
+        #print("lasteq2 {}".format(lasteq))
         #print("nexteq2 {}".format(nexteq))
     #print(lasteq)
     #print(ephem.Date(FRENCH_REVOLUTIONARY_EPOCH))
@@ -196,7 +196,7 @@ class RDate(datetime.date):
                                 #Year as decimal number.
                                 push(rdate['an'])
                             elif char == "Y":
-                                #Year as Romanian number.
+                                #Year as Romanan number.
                                 push(int_to_roman(rdate['an']))
                             elif char == "W":
                                 #Decade number in the year.
@@ -253,7 +253,7 @@ class RDate(datetime.date):
             %rI link to wikipedia image for the month.
             %rm Month as a zero-padded decimal number.
             %ry Year as decimal number.
-            %rY Year as Romanian number.
+            %rY Year as Romanan number.
             %rW Decade number in the year.
             %rf grain, pasture, trees, roots, flowers, fruits, animal, tool associated with the day
             %rF link to the french wikipage associated with the day
