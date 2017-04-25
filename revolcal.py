@@ -262,36 +262,6 @@ class RDate(datetime.date):
         return str(self)
 
 
-
-
-def tests():
-    """
-    test function
-    """
-    def test(year, month, day, expected):
-        """ test function """
-        date = RDate(year, month, day)
-        print("{}-{:02}-{:02} {}".format(year, month, day, expected))
-        print("{0} {0:%rA %rd %rB [Decade %rW] an %rY(%ry)}".format(date))
-        print("{}-{:02}-{:02} {}\n".format(year, month, day, expected))
-
-    test(1792, 9, 22, "Primidi 01 Vendémiaire [Decade 1] an I(1)")
-    test(1792, 9, 23, "Duodi 02 Vendémiaire [Decade 1] an I(1)")
-    test(1793, 5, 4, "Quintidi 15 Floreal [Decade 23] an I(1)")
-    test(1793, 9, 14, "Octidi 28 Fructidor [Decade 36] an I(1)")
-    test(1793, 9, 20, "Jour de l’opinion [Decade 37] an I(1)")
-    test(1795, 1, 18, "Nonidi 29 Nivose [Decade 3] an III(3)")
-    test(1798, 9, 21, "Jour des récompenses 05 [Decade 37] an VI(6)")
-    test(1798, 9, 22, "Primidi 01 Vendémiaire [Decade 1] an VII(7) error here as sextil year may have change")
-    test(1798, 9, 23, "Duodi 02 Vendémiaire [Decade 1] an VII(7)")
-    test(1798, 10, 20, "Nonidi 29 Vendémiaire [Decade 3] and VII(7)")
-    test(1799, 9, 17, "Jour de la vertu 01 [Decade 37] an VII(7)")
-    test(1799, 9, 22, "Jour de la révolution 06 [Decade 37] an VII(7)")
-    test(1803, 9, 22, "Jour des recompenses 05 [Decade 37] an XI(11)")
-    test(2013, 1, 21, "Duodi 02 Pluviose [Decade 13] an CCXXI(221)")
-    test(2013, 10, 21, "Décadi 30 Vendémiaire [Decade 3] an CCXXII(222)")
-
-
 def my_display(argv):
     """
     display date as I want
@@ -335,8 +305,4 @@ def my_display(argv):
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) == 2:
-        if sys.argv[1].startswith("test"):
-            tests()
-            exit()
     my_display(sys.argv)
