@@ -51,3 +51,6 @@ import revolcal
 date = revolcal.RDate.today()
 print("Bonjour Citoyen, aujourd'hui nous somme le {:%rA %rd %rB %rY}".format(date))
 ```
+
+## BUGS
+Dates may not be in line with the wikipedia ones. It seems that the wikipedia algorithm always use the September 22th as the first day of the Republican year. Here the first day of the year is the day of autumn equinox at Paris meridian.

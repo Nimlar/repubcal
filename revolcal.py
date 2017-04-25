@@ -80,41 +80,27 @@ def int_to_roman(value):
         value -= ints[i] * count
     return "".join(result)
 
-def equinoxe_automn(year):
-    """
-        get the automn equinox
-    """
-    return ephem.next_autumn_equinox(datetime.date(year, 1, 1))-1
-    #why -1 ???
-
 def annee_de_la_revolution(date):
     """
     Find corresponding revolutionnary year of current date
     """
-    guess = date.year - 2
-    edate = ephem.Date(date)
-    #print("edate {}".format(edate))
-    #print("guess0 {}".format(guess))
-    lasteq = equinoxe_automn(guess)
-    #print("lasteq0 {}".format(lasteq))
-    while lasteq > edate:
-        guess -= 1
-        #print("guess1 {}".format(guess))
-        lasteq = equinoxe_automn(guess)
-        #print("lasteq1 {}".format(lasteq))
-    nexteq = lasteq - 1
-    while not int(lasteq) <= edate < int(nexteq):
+    # Time are in UT (time at Greenwich meridian, so 0°)
+    # but we want the equinox at Paris meridian time so 2°20'13,82" (the one used in 1792)
+    # using the IGN value 2°20'13,82", add 14ms...
+    # see http://geodesie.ign.fr/contenu/fichiers/Meridiens_greenwich_paris.pdf (fr)
+    # => +0.15581138888888888888 hour == .00649214120370370370
+    lasteq = ephem.Date(ephem.previous_autumn_equinox(date) + 0.00649214120370370370)
+    nexteq = ephem.Date(ephem.next_autumn_equinox(date) + 0.00649214120370370370)
+
+
+#    print(lasteq, nexteq)
+    neq_dt = nexteq.datetime()
+    if neq_dt.year == date.year and neq_dt.month == date.month and neq_dt.day == date.day:
+        #the autumn equinox is the day we ask for (but after 00:00), so the lasteq is the current day
         lasteq = nexteq
-        guess += 1
-        #print("guess2 {}".format(guess))
-        nexteq = equinoxe_automn(guess)
-        #print("lasteq2 {}".format(lasteq))
-        #print("nexteq2 {}".format(nexteq))
-    #print(lasteq)
-    #print(ephem.Date(FRENCH_REVOLUTIONARY_EPOCH))
-    #print(((int(lasteq) - ephem.Date(FRENCH_REVOLUTIONARY_EPOCH)) / TROPICAL_YEAR))
-    year = round((lasteq - ephem.Date(FRENCH_REVOLUTIONARY_EPOCH)) / TROPICAL_YEAR) + 1
-    return (int(year), lasteq)
+
+    year = ((lasteq - ephem.Date(FRENCH_REVOLUTIONARY_EPOCH)) / TROPICAL_YEAR) + 1
+    return (int(year), lasteq.datetime().date())
 
 def d_to_french_revolutionary(date):
     """
@@ -128,9 +114,10 @@ def d_to_french_revolutionary(date):
     """
     rdate = {}
     rdate['an'], equinoxe = annee_de_la_revolution(date)
-    rdate['mois'] = (int(ephem.Date(date) - equinoxe) // 30)
-    rdate['jour'] = int(ephem.Date(date) - equinoxe) % 30
-    rdate['decade'] = (rdate['jour'] // 10) + 1 +3*rdate['mois']
+    nb_day_in_year = (date - equinoxe).days
+    rdate['mois'] = nb_day_in_year / 30
+    rdate['jour'] = nb_day_in_year % 30
+    rdate['decade'] = (rdate['jour'] // 10) + 1 + 3*rdate['mois']
     return rdate
 
 
