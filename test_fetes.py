@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
 """
-tests for revolcal module
+tests for repubcal module
 """
 
 from __future__ import print_function
-from revolcal import RDate
+from repubcal import RDate
 import datetime
 
 

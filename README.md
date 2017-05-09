@@ -1,4 +1,4 @@
-# revolcal
+# repubcal
 Python module to convert to French Republican Calendar
 
 
@@ -9,22 +9,22 @@ by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer))
 
 * To get the today information
 
-`python revolcal.py`
+`python repubcal.py`
 
 * To get day information with an offset from today
 
-`python revolcal.py -1` to print yesterday info, `python revolcal.py 2` to print after tomorrow info.
+`python repubcal.py -1` to print yesterday info, `python repubcal.py 2` to print after tomorrow info.
 
 * To get any day information:
 
-`python revolcal.py 2016 5 31`, will display republican calendar information of of Tuesday 31 May 2016
+`python repubcal.py 2016 5 31`, will display republican calendar information of of Tuesday 31 May 2016
 
 * To run the internal test
-`python revolcal.py test`
+`python repubcal.py test`
 Note the 1798-09-22 date that is not correct.
 
 ## Usage as module.
-The `revolcal` module define a new class RDate (a sub class of datetime.date)
+The `repubcal` module define a new class RDate (a sub class of datetime.date)
 
 Only interesting part in this new class is the new `%r?` descriptors of the `format()` method.
 
@@ -46,9 +46,9 @@ All possible date action, are inherited from the python `datetime.date` class
 
 ```python
 
-import revolcal
+import repubcal
 
-date = revolcal.RDate.today()
+date = repubcal.RDate.today()
 print("Bonjour Citoyen, aujourd'hui nous somme le {:%rA %rd %rB %rY}".format(date))
 ```
 
