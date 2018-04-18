@@ -189,7 +189,7 @@ class RDate(datetime.date):
                                 #Decade number in the year.
                                 push(rdate['decade'])
                             elif char == "f":
-                                #fete oif the day.
+                                #fete of the day.
                                 if rdate['mois'] >= len(REV_MONTH_NAMES):
                                     push(SANSCULOTTIDES[rdate['jour'] % 10])
                                 else:
