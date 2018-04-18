@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # This Python file uses the following encoding: utf-8
 """
 Provide an extension of datetime to manage revolutionnary date
