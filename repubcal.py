@@ -264,7 +264,7 @@ def my_display(argv):
     display date as I want
     """
     ldate = RDate.today()
-    prefix = "Aujourd’hui nous sommes le"
+    prefix = "Nous sommes le"
     if len(argv) == 2:
         ldate = None
         try:
