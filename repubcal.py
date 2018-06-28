@@ -637,7 +637,7 @@ def my_display(argv):
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
     print("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
-    fete_name = "{0:%rf}".format(ldate)
+    fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
     if fete_name.startswith("le "):
         article = "au"
         fete_name = fete_name[3:]
