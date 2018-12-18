@@ -107,7 +107,7 @@ FETES = [
         ("le Turneps", "Betterave fourragère"),
         ("la Chicorée", "Chicorée"),
         ("la Nèfle", "Nèfle"),
-        ("le Cochon", "Cochon", "🐷🐖🐽"),
+        ("le Cochon", "Cochon", "🐷🐖🐽🥓"),
         ("la Mâche", "Mâche"),
         ("le Chou-fleur", "Chou-fleur"),
         ("le Miel", "Miel", "🍯"),
@@ -129,7 +129,7 @@ FETES = [
         ("l’Oseille", "Oseille"),
         ("le Grillon", "Gryllidae"),
         ("le Pignon", "Pignon de pin"),
-        ("le Liège", "Liège"),
+        ("le Liège", "Liège (matériau)"),
         ("la Truffe", "Truffe (champignon)"),
         ("l’Olive", "Olive"),
         ("la Pelle", "Pelle (outil)")],
@@ -636,6 +636,8 @@ def my_display(argv):
     if len(argv) == 4:
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
+    print("Salut et fratern·soror·ité !")
+    print("Salut et fraternité !")
     print("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
     fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
     if fete_name.startswith("le "):
