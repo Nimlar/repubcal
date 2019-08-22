@@ -385,7 +385,7 @@ FETES = [
         ("la Prune", "Prune (fruit)"),
         ("le Millet", "Millet (graminée)", "🌾"),
         ("le Lycoperdon", "Vesse-de-loup"),
-        ("l’Escourgeon", "Escourgeon"),
+        ("l’Escourgeon", "Escourgeon", "🌾"),
         ("le Saumon", "Saumon"),
         ("la Tubéreuse", "Tubéreuse"),
         ("le Sucrion", "Escourgeon"),
