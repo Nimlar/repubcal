@@ -615,6 +615,10 @@ def my_display(argv):
     prefix = "Nous sommes le"
     if len(argv) == 2:
         ldate = None
+        if argv[1] == "weechat":
+            print("\n".join(get_greeting(None)))
+            return
+
         try:
             delay = int(argv[1])
             tdate = datetime.date.today() + datetime.timedelta(delay)
@@ -633,6 +637,7 @@ def my_display(argv):
                 prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
         except ValueError:
             print("value error")
+            return
     if len(argv) == 4:
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
@@ -650,6 +655,49 @@ def my_display(argv):
 
     print("")
 
+
+def get_greeting(args):
+    ldate = RDate.today()
+    prefix = "Nous sommes le"
+    greeting = [ "Salut et fraternité !" ]
+    greeting.append("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
+    fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
+    if fete_name.startswith("le "):
+        article = "au"
+        fete_name = fete_name[3:]
+    else:
+        article = "à"
+
+    greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
+    if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
+        greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
+
+    return greeting
+
+
+#use as a weechat plugin
+try:
+    import weechat
+
+    weechat.register("calendar_python", "Nimlar", "0.1", "GPL3", "today greetings", "", "")
+    hook = weechat.hook_command("greeting", "Éphéméride républicaine du jour",
+                "no param",
+                "descrition des paramètres",
+                "none",
+                "repub_greeting_cb", "")
+
+    def repub_greeting_cb(data, buff, args):
+        greeting = get_greeting(args)
+        for line in greeting:
+            weechat.command(buff, line)
+
+        return weechat.WEECHAT_RC_OK
+
+except ImportError:
+    pass
+
+
+# direct run
 if __name__ == "__main__":
     import sys
     my_display(sys.argv)

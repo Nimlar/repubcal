@@ -5,7 +5,7 @@ Python module to convert to French Republican Calendar
 Algorithm source from https://www.fourmilab.ch/documents/calendar/calendar.js
 by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer))
 
-## Usage from command line:
+## Use from command line:
 
 * To get the today information
 
@@ -23,7 +23,7 @@ by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer))
 `python repubcal.py test`
 Note the 1798-09-22 date that is not correct.
 
-## Usage as module.
+## Use as module.
 The `repubcal` module define a new class RDate (a sub class of datetime.date)
 
 Only interesting part in this new class is the new `%r?` descriptors of the `format()` method.
@@ -51,6 +51,18 @@ import repubcal
 date = repubcal.RDate.today()
 print("Bonjour Citoyen, aujourd'hui nous somme le {:%rA %rd %rB %rY}".format(date))
 ```
+
+
+## Use as weechat plugin.
+
+Copy/link `repubcal.py` in weechat python plugin directory `~/.weechat/python/`
+
+In weechat load the plugin `/python load ./python/repubcal.py`
+
+Use the new command `/greeting` in any chan.
+
+### TODO
+add some option to the /greeting command
 
 ## BUGS
 Dates may not be in line with the wikipedia ones. It seems that the wikipedia algorithm always use the September 22th as the first day of the Republican year. Here the first day of the year is the day of autumn equinox at Paris meridian.
