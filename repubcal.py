@@ -613,12 +613,12 @@ def my_display(argv):
     """
     ldate = RDate.today()
     prefix = "Nous sommes le"
+    if len(argv) >= 2 and  argv[1] == "weechat":
+        print("\n".join(get_greeting(None)))
+        return
+
     if len(argv) == 2:
         ldate = None
-        if argv[1] == "weechat":
-            print("\n".join(get_greeting(None)))
-            return
-
         try:
             delay = int(argv[1])
             tdate = datetime.date.today() + datetime.timedelta(delay)
@@ -636,7 +636,7 @@ def my_display(argv):
             else:
                 prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
         except ValueError:
-            print("value error")
+            print("parameters error {}".format(argv[1:]))
             return
     if len(argv) == 4:
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
@@ -667,8 +667,9 @@ def get_greeting(args):
         fete_name = fete_name[3:]
     else:
         article = "à"
+    if ldate.revo()['mois'] != 12:
+        greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
 
-    greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
 

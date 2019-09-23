@@ -59,10 +59,10 @@ Copy/link `repubcal.py` in weechat python plugin directory `~/.weechat/python/`
 
 In weechat load the plugin `/python load ./python/repubcal.py`
 
-Use the new command `/greeting` in any chan.
+Use the new command `/greeting` in a chan.
 
 ### TODO
-add some option to the /greeting command
+add option to the /greeting command
 
 ## BUGS
 Dates may not be in line with the wikipedia ones. It seems that the wikipedia algorithm always use the September 22th as the first day of the Republican year. Here the first day of the year is the day of autumn equinox at Paris meridian.
