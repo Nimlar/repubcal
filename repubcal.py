@@ -673,6 +673,15 @@ def get_greeting(args):
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
 
+    if ldate.weekday() == 0:
+        manque = []
+        manque.append("Nous avons manqué")
+        for i in range (-2,0):
+            tdate = datetime.date.today() + datetime.timedelta(i)
+            ldate = RDate(tdate.year, tdate.month, tdate.day)
+            manque.append("{0:%rf} {0:%ru} {0:%rF}".format(ldate).strip())
+        greeting.append(" ".join(manque))
+
     return greeting
 
 
@@ -695,10 +704,7 @@ try:
         return weechat.WEECHAT_RC_OK
 
 except ImportError:
-    pass
-
-
-# direct run
-if __name__ == "__main__":
-    import sys
-    my_display(sys.argv)
+    # direct run
+    if __name__ == "__main__":
+        import sys
+        my_display(sys.argv)
