@@ -13,6 +13,8 @@ from __future__ import print_function
 import datetime
 import ephem
 
+CONFIN_DAY0 = datetime.date(2020, 3, 16)
+
 WIKI_BASE_URL = "https://fr.wikipedia.org/wiki/"
 TROPICAL_YEAR = 365.24219878
 FRENCH_REVOLUTIONARY_EPOCH = datetime.date(1792, 9, 22)
@@ -670,6 +672,7 @@ def get_greeting(args):
     if ldate.revo()['mois'] != 12:
         greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
 
+    greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
 
