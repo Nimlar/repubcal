@@ -466,7 +466,7 @@ def d_to_french_revolutionary(date):
     rdate = {}
     rdate['an'], equinoxe = annee_de_la_revolution(date)
     nb_day_in_year = (date - equinoxe).days
-    rdate['mois'] = nb_day_in_year / 30
+    rdate['mois'] = nb_day_in_year // 30
     rdate['jour'] = nb_day_in_year % 30
     rdate['decade'] = (rdate['jour'] // 10) + 1 + 3*rdate['mois']
     return rdate
