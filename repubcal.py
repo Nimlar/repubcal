@@ -668,10 +668,14 @@ def get_greeting(args):
         article = "à"
     if ldate.revo()['mois'] != 12:
         greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
+    else:
+        greeting.append("{0:%rf}{0:%ru} : {0:%rF}".format(ldate))
 
     greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
+    elif ldate.weekday() == 0 and ldate.revo()['jour'] <= 2:
+        greeting.append("Nouveau mois {0:%rB : %rI}".format(ldate))
 
     if ldate.weekday() == 0:
         manque = []
