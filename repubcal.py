@@ -541,26 +541,23 @@ class RDate(datetime.date):
                                 push(rdate['decade'])
                             elif char == "f":
                                 #fete of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
-                                    push(SANSCULOTTIDES[rdate['jour'] % 10])
-                                else:
+                                try:
                                     push(FETES[rdate['mois']][rdate['jour']][0])
+                                except (KeyError, IndexError):
+                                    push("")
                             elif char == "F":
                                 #wikipedia url of the fete of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
-                                    push("")
-                                else:
+                                try:
                                     resource = FETES[rdate['mois']][rdate['jour']][1]
                                     push("{}{}".format(WIKI_BASE_URL, resource.replace(" ", "_")))
+                                except (KeyError, IndexError):
+                                    push("")
                             elif char == "u":
                                 #unicode of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
+                                try:
+                                    push(FETES[rdate['mois']][rdate['jour']][2])
+                                except (KeyError, IndexError):
                                     push("")
-                                else:
-                                    try:
-                                        push(FETES[rdate['mois']][rdate['jour']][2])
-                                    except IndexError:
-                                        push("")
                             else:
                                 push("%r")
                                 push(char)
