@@ -413,7 +413,14 @@ FETES = [
         ("la Verge d'or", "Verge d'or"),
         ("le Maïs", "Maïs", "🌽"),
         ("le Marron", "Marron (fruit)", "🌰"),
-        ("le Panier", "Panier")]
+        ("le Panier", "Panier")],
+    [#jours suplementaires
+            ("la Vertu", "https://fr.wikipedia.org/wiki/Vertu"),
+            ("le Génie", "https://fr.wikipedia.org/wiki/Génie_(technique)"),
+            ("le Travail", "https://fr.wikipedia.org/wiki/Travail"),
+            ("l'Opinion", "https://fr.wikipedia.org/wiki/Opinion"),
+            ("la Récompense", "https://fr.wikipedia.org/wiki/Récompense"),
+            ("La Révolution", "https://fr.wikipedia.org/wiki/Révolution_française", "🇫🇷")]
 ]
 
 def int_to_roman(value):
@@ -661,6 +668,7 @@ def get_greeting(args):
     greeting = [ "Salut et fraternité !" ]
     greeting.append("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
     fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
+
     if fete_name.startswith("le "):
         article = "au"
         fete_name = fete_name[3:]
@@ -671,7 +679,8 @@ def get_greeting(args):
     else:
         greeting.append("{0:%rf}{0:%ru} : {0:%rF}".format(ldate))
 
-    greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
+#    greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
+
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
     elif ldate.weekday() == 0 and ldate.revo()['jour'] <= 2:
