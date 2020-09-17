@@ -13,6 +13,8 @@ from __future__ import print_function
 import datetime
 import ephem
 
+CONFIN_DAY0 = datetime.date(2020, 3, 16)
+
 WIKI_BASE_URL = "https://fr.wikipedia.org/wiki/"
 TROPICAL_YEAR = 365.24219878
 FRENCH_REVOLUTIONARY_EPOCH = datetime.date(1792, 9, 22)
@@ -411,7 +413,14 @@ FETES = [
         ("la Verge d'or", "Verge d'or"),
         ("le Maïs", "Maïs", "🌽"),
         ("le Marron", "Marron (fruit)", "🌰"),
-        ("le Panier", "Panier")]
+        ("le Panier", "Panier")],
+    [#jours suplementaires
+            ("la Vertu", "https://fr.wikipedia.org/wiki/Vertu"),
+            ("le Génie", "https://fr.wikipedia.org/wiki/Génie_(technique)"),
+            ("le Travail", "https://fr.wikipedia.org/wiki/Travail"),
+            ("l'Opinion", "https://fr.wikipedia.org/wiki/Opinion"),
+            ("la Récompense", "https://fr.wikipedia.org/wiki/Récompense"),
+            ("La Révolution", "https://fr.wikipedia.org/wiki/Révolution_française", "🇫🇷")]
 ]
 
 def int_to_roman(value):
@@ -539,26 +548,23 @@ class RDate(datetime.date):
                                 push(rdate['decade'])
                             elif char == "f":
                                 #fete of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
-                                    push(SANSCULOTTIDES[rdate['jour'] % 10])
-                                else:
+                                try:
                                     push(FETES[rdate['mois']][rdate['jour']][0])
+                                except (KeyError, IndexError):
+                                    push("")
                             elif char == "F":
                                 #wikipedia url of the fete of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
-                                    push("")
-                                else:
+                                try:
                                     resource = FETES[rdate['mois']][rdate['jour']][1]
                                     push("{}{}".format(WIKI_BASE_URL, resource.replace(" ", "_")))
+                                except (KeyError, IndexError):
+                                    push("")
                             elif char == "u":
                                 #unicode of the day.
-                                if rdate['mois'] >= len(REV_MONTH_NAMES):
+                                try:
+                                    push(FETES[rdate['mois']][rdate['jour']][2])
+                                except (KeyError, IndexError):
                                     push("")
-                                else:
-                                    try:
-                                        push(FETES[rdate['mois']][rdate['jour']][2])
-                                    except IndexError:
-                                        push("")
                             else:
                                 push("%r")
                                 push(char)
@@ -613,6 +619,10 @@ def my_display(argv):
     """
     ldate = RDate.today()
     prefix = "Nous sommes le"
+    if len(argv) >= 2 and  argv[1] == "weechat":
+        print("\n".join(get_greeting(None)))
+        return
+
     if len(argv) == 2:
         ldate = None
         try:
@@ -632,7 +642,8 @@ def my_display(argv):
             else:
                 prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
         except ValueError:
-            print("value error")
+            print("parameters error {}".format(argv[1:]))
+            return
     if len(argv) == 4:
         ldate = RDate(int(argv[1]), int(argv[2]), int(argv[3]))
         prefix = "Le {0:%A %d %B %Y} correspond à".format(ldate)
@@ -650,6 +661,63 @@ def my_display(argv):
 
     print("")
 
-if __name__ == "__main__":
-    import sys
-    my_display(sys.argv)
+
+def get_greeting(args):
+    ldate = RDate.today()
+    prefix = "Nous sommes le"
+    greeting = [ "Salut et fraternité !" ]
+    greeting.append("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
+    fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
+
+    if fete_name.startswith("le "):
+        article = "au"
+        fete_name = fete_name[3:]
+    else:
+        article = "à"
+    if ldate.revo()['mois'] != 12:
+        greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
+    else:
+        greeting.append("{0:%rf}{0:%ru} : {0:%rF}".format(ldate))
+
+#    greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
+
+    if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
+        greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
+    elif ldate.weekday() == 0 and ldate.revo()['jour'] <= 2:
+        greeting.append("Nouveau mois {0:%rB : %rI}".format(ldate))
+
+    if ldate.weekday() == 0:
+        manque = []
+        manque.append("Nous avons manqué")
+        for i in range (-2,0):
+            tdate = datetime.date.today() + datetime.timedelta(i)
+            ldate = RDate(tdate.year, tdate.month, tdate.day)
+            manque.append("{0:%rf} {0:%ru} {0:%rF}".format(ldate).strip())
+        greeting.append(" ".join(manque))
+
+    return greeting
+
+
+#use as a weechat plugin
+try:
+    import weechat
+
+    weechat.register("calendar_python", "Nimlar", "0.1", "GPL3", "today greetings", "", "")
+    hook = weechat.hook_command("greeting", "Éphéméride républicaine du jour",
+                "no param",
+                "descrition des paramètres",
+                "none",
+                "repub_greeting_cb", "")
+
+    def repub_greeting_cb(data, buff, args):
+        greeting = get_greeting(args)
+        for line in greeting:
+            weechat.command(buff, line)
+
+        return weechat.WEECHAT_RC_OK
+
+except ImportError:
+    # direct run
+    if __name__ == "__main__":
+        import sys
+        my_display(sys.argv)
