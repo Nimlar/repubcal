@@ -415,12 +415,12 @@ FETES = [
         ("le Marron", "Marron (fruit)", "🌰"),
         ("le Panier", "Panier")],
     [#jours suplementaires
-            ("la Vertu", "https://fr.wikipedia.org/wiki/Vertu"),
-            ("le Génie", "https://fr.wikipedia.org/wiki/Génie_(technique)"),
-            ("le Travail", "https://fr.wikipedia.org/wiki/Travail"),
-            ("l'Opinion", "https://fr.wikipedia.org/wiki/Opinion"),
-            ("la Récompense", "https://fr.wikipedia.org/wiki/Récompense"),
-            ("La Révolution", "https://fr.wikipedia.org/wiki/Révolution_française", "🇫🇷")]
+            ("la Vertu", "Vertu"),
+            ("le Génie", "Génie_(technique)"),
+            ("le Travail", "Travail"),
+            ("l'Opinion", "Opinion"),
+            ("la Récompense", "Récompense"),
+            ("La Révolution", "Révolution_française", "🇫🇷")]
 ]
 
 def int_to_roman(value):
