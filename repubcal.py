@@ -42,18 +42,18 @@ REV_MONTH_NAMES = ['Vendémiaire', 'Brumaire', 'Frimaire', 'Nivôse', 'Pluviôse
                    'Germinal', 'Floréal', 'Prairial', 'Messidor', 'Thermidor', 'Fructidor']
 BASE_MONTH_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/"
 REV_MONTH_IMAGES = [
-    "c/cd/Vendémiaire_commence_le_22_septembre.jpg",
-    "6/62/Brumaire_commence_le_23_octobre.jpg",
-    "e/e3/Frimaire_commence_le_22_novembre.jpg",
-    "b/b6/Nivôse_commence_le_22_décembre.jpg",
-    "0/09/Pluviôse_commence_le_21_ou_22_janvier.jpg",
-    "7/7a/Ventôse_commence_le_20_ou_21_février.jpg",
-    "0/0a/Germinal_commence_le_21_ou_22_mars.jpg",
-    "f/fe/Floréal_commence_le_21_avril.jpg",
-    "4/4b/Prairial_commence_le_21_mai.jpg",
-    "a/af/Messidor_commence_le_21_ou_22_juin.jpg",
-    "b/bb/Thermidor_commence_le_20_ou_21_juillet.jpg",
-    "8/8c/Fructidor_commence_le_21_ou_22_août.jpg"
+    "b/ba/Vendémiaire,_G.14026_(3_of_3).jpg",
+    "f/fc/Brumaire,_G.14027(3).jpg",
+    "8/82/Frimaire,_G.14028(3).jpg",
+    "e/e0/Nivose,_G.29939.jpg",
+    "9/93/Pluviose,_G.29940.jpg",
+    "0/00/Ventose,_G.14031_(3_of_3).jpg",
+    "9/95/Germinal,_G.14032(3).jpg",
+    "d/d8/Floreal,_G.14033(3).jpg",
+    "5/5b/Prairial,_G.29941.jpg",
+    "d/df/Messidor,_G.25025.jpg",
+    "8/8d/Thermidor,_G.14036_(3_of_3).jpg",
+    "0/0b/Fructidor,_G.14037(3).jpg"
 ]
 SANSCULOTTIDES = ['Jour de la vertu', 'Jour du génie', 'Jour du travail', 'Jour de l’opinion',
                   'Jour des récompenses', 'Jour de la Révolution']
