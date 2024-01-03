@@ -252,7 +252,7 @@ FETES = [
         ("le Gainier", "Arbre de Judée"),
         ("la Romaine", "Laitue romaine"),
         ("le Marronnier", "Marronnier commun"),
-        ("la Roquette", "Roquette (plante)", "🌼"),
+        ("la Roquette", "Roquette (plante)"),
         ("le Pigeon", "Pigeon", "🐦🕊"),
         ("le Lilas (commun)", "Syringa vulgaris"),
         ("l’Anémone", "Anémone"),
