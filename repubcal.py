@@ -12,9 +12,26 @@ Provide an extension of datetime to manage revolutionnary date
 from __future__ import print_function
 import datetime
 import ephem
+try:
+    from num2words import num2words
+    def to_ordinal(num):
+        return num2words(num, lang="fr", to="ordinal")
+except ModuleNotFoundError:
+    def to_ordinal(num):
+        return str(num)
 
 CONFIN_DAY0 = datetime.date(2020, 3, 16)
+CONFIN_DAY1 = datetime.date(2020, 10, 29)
+COUVREFEU_DAY1 = datetime.date(2020, 12, 15)
+COUVREFEU18_DAY1 = datetime.date(2021, 1, 14)
+COUVREFEU19_DAY1 = datetime.date(2021, 3, 18)
+VIGILANCE_RENFOR = datetime.date(2021, 4, 3)
+DECONF_DAY = datetime.date(2021, 5, 2)
+DECONF_DAY_PHASE1 = datetime.date(2021, 5, 2)
+DECONF_DAY_PHASE2 = datetime.date(2021, 5, 18)
+DECONF_DAY_PHASE3 = datetime.date(2021, 6, 8)
 
+CONFIN_DAY2 = datetime.date(2020, 10, 29)
 WIKI_BASE_URL = "https://fr.wikipedia.org/wiki/"
 TROPICAL_YEAR = 365.24219878
 FRENCH_REVOLUTIONARY_EPOCH = datetime.date(1792, 9, 22)
@@ -618,11 +635,33 @@ def my_display(argv):
     display date as I want
     """
     ldate = RDate.today()
-    prefix = "Nous sommes le"
-    if len(argv) >= 2 and  argv[1] == "weechat":
-        print("\n".join(get_greeting(None)))
+    if len(argv) >= 2 and argv[1] == "teams":
+        if len(argv) == 2:
+            ldate = RDate.today()
+        elif len(argv) == 3:
+            delay = int(argv[2])
+            tdate = datetime.date.today() + datetime.timedelta(delay)
+            ldate = RDate(tdate.year, tdate.month, tdate.day)
+        elif len(argv) == 5:
+            ldate = RDate(int(argv[2]), int(argv[3]), int(argv[4]))
+
+        print("\n".join(get_greeting(ldate, None)))
         return
 
+    if len(argv) >= 2 and  argv[1] == "html":
+        if len(argv) == 2:
+            ldate = RDate.today()
+        elif len(argv) == 3:
+            delay = int(argv[2])
+            tdate = datetime.date.today() + datetime.timedelta(delay)
+            ldate = RDate(tdate.year, tdate.month, tdate.day)
+        elif len(argv) == 5:
+            ldate = RDate(int(argv[2]), int(argv[3]), int(argv[4]))
+
+        print("\n".join(html_greeting(ldate, None)))
+        return
+
+    prefix = "Nous sommes le"
     if len(argv) == 2:
         ldate = None
         try:
@@ -661,13 +700,11 @@ def my_display(argv):
 
     print("")
 
-
-def get_greeting(args):
-    ldate = RDate.today()
-    prefix = "Nous sommes le"
-    greeting = [ "Salut et fraternité !" ]
-    greeting.append("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
-    fete_name = "{0:%rf} {0:%ru} ".format(ldate).strip()
+def html_greeting(ldate, args):
+    prefix = "<p>Nous sommes le"
+    greeting = [ "<p>Salut et fraternité !</p>" ]
+    greeting.append("<p>{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}</p>".format(prefix, ldate))
+    fete_name = "{0:%rf}".format(ldate)
 
     if fete_name.startswith("le "):
         article = "au"
@@ -675,25 +712,67 @@ def get_greeting(args):
     else:
         article = "à"
     if ldate.revo()['mois'] != 12:
-        greeting.append("Cette journée est dédiée {} {} {:%rF}".format(article, fete_name, ldate))
+        greeting.append('<p>Cette journée est dédiée {0} <a href="{2:%rF}">{1} {2:%ru}</a></p>'.format(article, fete_name, ldate).strip())
+    else:
+        greeting.append('<p><a href="{0:%rF}">{0:%rf}{0:%ru}</a></p>'.format(ldate))
+
+    if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
+        greeting.append('<p>Le premier, l\'image du mois : {0:<a href="%rI">%rB</a>}</p>'.format(ldate))
+    elif ldate.weekday() == 0 and ldate.revo()['jour'] <= 2:
+        greeting.append('<p>Nouveau mois {0:<a href="%rI">%rB</a>}</p>'.format(ldate))
+
+    if ldate.weekday() == 0:
+        manque = []
+        manque.append("<p><br></p>\n<p>Nous avons manqué")
+        miss = []
+        for i in range (-2,0):
+            tdate = ldate + datetime.timedelta(i)
+            lldate = RDate(tdate.year, tdate.month, tdate.day)
+            miss.append('<a href="{0:%rF}">{0:%rf} {0:%ru}</a>'.format(lldate).strip())
+        manque.append(" et ".join(miss))
+        greeting.append(" ".join(manque))
+        greeting.append("</p>")
+
+    return greeting
+
+
+def get_greeting(ldate, args):
+    prefix = "Nous sommes le"
+    greeting = [ "Salut et fraternité !" ]
+    greeting.append("{0} {1:%rA %rd %rB %rY (%ry/%rm/%rd)}".format(prefix, ldate))
+    fete_name = "{0:%rf}".format(ldate)
+
+    if fete_name.startswith("le "):
+        article = "au"
+        fete_name = fete_name[3:]
+    else:
+        article = "à"
+    if ldate.revo()['mois'] != 12:
+        greeting.append("Cette journée est dédiée {0} [{1} {2:%ru}]({2:%rF})".format(article, fete_name, ldate).strip())
     else:
         greeting.append("{0:%rf}{0:%ru} : {0:%rF}".format(ldate))
-
-#    greeting.append("Jour {} du Grand Confinement".format((ldate-CONFIN_DAY0).days))
 
     if ldate.revo()['jour'] == 0 and ldate.revo()['mois'] != 12:
         greeting.append("Le premier, l'image du mois : {0:%rB : %rI}".format(ldate))
     elif ldate.weekday() == 0 and ldate.revo()['jour'] <= 2:
-        greeting.append("Nouveau mois {0:%rB : %rI}".format(ldate))
+        greeting.append("Nouveau mois {0:[%rB](%rI)}".format(ldate))
 
     if ldate.weekday() == 0:
         manque = []
-        manque.append("Nous avons manqué")
+        manque.append("\nNous avons manqué")
+        miss = []
         for i in range (-2,0):
-            tdate = datetime.date.today() + datetime.timedelta(i)
-            ldate = RDate(tdate.year, tdate.month, tdate.day)
-            manque.append("{0:%rf} {0:%ru} {0:%rF}".format(ldate).strip())
+            tdate = ldate + datetime.timedelta(i)
+            lldate = RDate(tdate.year, tdate.month, tdate.day)
+            miss.append("[{0:%ru}{0:%rf}]({0:%rF})".format(lldate).strip())
+        manque.append(" et ".join(miss))
         greeting.append(" ".join(manque))
+
+    #greeting.append("\n{} jour de vigilance renforcée nationale [aka confinement 3]".format(to_ordinal((ldate-VIGILANCE_RENFOR).days).capitalize()))
+    #greeting.append("\n{} jour du protocole de déconfinement".format(to_ordinal((ldate-DECONF_DAY).days).capitalize()))
+    #greeting.append("{} jour de la phase 1 du protocole de déconfinement".format(to_ordinal((ldate-DECONF_DAY_PHASE1).days).capitalize()))
+    #greeting.append("{} jour de la phase 2 du protocole de déconfinement".format(to_ordinal((ldate-DECONF_DAY_PHASE2).days).capitalize()))
+    #greeting.append("{} jour de la phase 3 du protocole de déconfinement".format(to_ordinal((ldate-DECONF_DAY_PHASE3).days).capitalize()))
 
     return greeting
 
@@ -710,14 +789,17 @@ try:
                 "repub_greeting_cb", "")
 
     def repub_greeting_cb(data, buff, args):
-        greeting = get_greeting(args)
+        ldate = RDate.today()
+        greeting = get_greeting(ldate, args)
         for line in greeting:
             weechat.command(buff, line)
 
         return weechat.WEECHAT_RC_OK
 
 except ImportError:
-    # direct run
-    if __name__ == "__main__":
-        import sys
-        my_display(sys.argv)
+    pass
+
+# direct run
+if __name__ == "__main__":
+    import sys
+    my_display(sys.argv)
