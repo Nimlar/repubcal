@@ -358,7 +358,7 @@ FETES = [
         ("le Melon", "Melon (plante)", "🍈"),
         ("l’Ivraie", "Ivraie"),
         ("le Bélier", "Bélier", "🐏"),
-        ("la Prêle", "Sphenophyta"),
+        ("la Prêle", "Equisetum"),
         ("l’Armoise", "Armoise"),
         ("la Carthame", "Carthame"),
         ("la Mûre", "Mûre (fruit de la ronce)"),
